@@ -1,0 +1,9 @@
+{
+  "generator-node": {
+    "promptValues": {
+      "authorName": "amass",
+      "authorEmail": "wearde.studio@gmail.com",
+      "authorUrl": ""
+    }
+  }
+}
