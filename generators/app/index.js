@@ -1,32 +1,46 @@
 'use strict';
 const Generator = require('yeoman-generator');
-const chalk = require('chalk');
-const yosay = require('yosay');
+const prompts = require('./prompts');
+const storeFiles = require('./templates/store/write');
+const logs = require('../../logs');
 
 module.exports = class extends Generator {
   prompting() {
-    // Have Yeoman greet the user.
-    this.log(
-      yosay(`Welcome to the riveting ${chalk.red('generator-4-redux')} generator!`)
-    );
+    this.log(logs.start());
+    this.log(logs.welcome());
 
-    const prompts = [
-      {
-        type: 'list',
-        name: 'features',
-        message: 'What do you want create',
-        choices: ['store']
-      }
-    ];
-
-    return this.prompt(prompts).then(props => {
-      // To access props later use this.props.someAnswer;
-      this.props = props;
+    return this.prompt(prompts).then(answers => {
+      this.name = answers.name;
+      this.feature = answers.feature;
+      this.agree = answers.agree;
     });
   }
 
-  install() {
-    const type = `4-redux:${this.props.features}`;
-    this.spawnCommand('yo', [type]);
+  configuring() {
+    const implemented = ['store'];
+    if (!implemented.includes(this.feature)) {
+      this.log(logs.notImlement(this.feature));
+      this.log(logs.end());
+      process.exit(1);
+    }
+    if (this.agree === false) {
+      this.log(logs.notAgree());
+      this.log(logs.end());
+      process.exit(1);
+    }
+  }
+
+  writing() {
+    storeFiles(this.name).forEach(element => {
+      this.fs.copyTpl(
+        this.templatePath(element.templatePath),
+        this.destinationPath(element.destinationPath),
+        element.props
+      );
+    });
+  }
+
+  end() {
+    this.log(logs.end());
   }
 };

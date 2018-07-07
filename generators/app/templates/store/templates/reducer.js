@@ -5,13 +5,13 @@ const initialState = {
   data: [],
   meta: {},
   loading: false,
-  errror: null,
+  errror: null
 };
 const success = (state, { payload }) => ({
   ...state,
   data: payload.data,
   meta: payload.meta,
-  loading: false,
+  loading: false
 });
 
 const request = (state, { payload }) => ({
@@ -22,7 +22,7 @@ const request = (state, { payload }) => ({
 const error = (state, { payload }) => ({
   ...state,
   error: payload,
-  loading: false,
+  loading: false
 });
 
 export default createReducer(initialState, {
